@@ -4,7 +4,7 @@ const userController = require('../controllers/user_controller');
 
 const router = express.Router();
 
-router.get('/get_user'. userController.getUserController);
+router.get('/get_user', userController.getUserController);
 
 router.get('/rank_users', userController.getRankUsers);
 
