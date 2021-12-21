@@ -1,0 +1,15 @@
+http://localhost:8000
+###
+POST http://localhost:8000/api/user/create_user
+content-type: application/json
+
+{
+    "full_name": "Nguyen Van Tai",
+    "email": "tai@gmail.com",
+    "password": "123456789"
+}
+###
+POST url HTTP/1.1
+header name: header value
+
+content

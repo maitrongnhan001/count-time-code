@@ -15,11 +15,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/' , (req , res)=>{
-    console.log('hello');
-    res.send('Hello');
+const userRouter = require('./routers/user.js');
 
-});
+app.use('/api/user/', userRouter);
+
+app.use('/api/count_time_code/', userRouter);
+
+
 
 const PORT = process.env.APP_PORT || 8000;
 app.listen(PORT, () => {
