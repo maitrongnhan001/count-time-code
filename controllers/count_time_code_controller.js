@@ -1,6 +1,7 @@
 const count_time_code = require('../models/count_time_code.js');
 
 module.exports.getTotalTimeCode = async (req, res) => {
+    //function get total time code
     try {
         if (!req.query.id) {
             return res.status(400).json({
