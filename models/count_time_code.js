@@ -2,7 +2,15 @@ const { connection } = require('../config/database.js');
 
 module.exports.getTotalTimeCode = (id) => {
     return new Promise((reslove, reject) => {
-
+        const sql = "SELECT start_time, end_time FROM count_time_code WHERE user_id = " + id;
+        connection.query(sql, (error, result) => {
+            if (!error) {
+                const res = JSON.parse(JSON.stringify(result));
+                reslove(res);
+            } else {
+                reject(error);
+            }
+        })
     });
 }
 

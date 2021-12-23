@@ -15,3 +15,5 @@ router.get('/get_dashboard_by_months', count_time_codeController.getDashBoardByM
 router.post('/start_code', count_time_codeController.startCode);
 
 router.post('/pause_code', count_time_codeController.pauseCode);
+
+module.exports = router;

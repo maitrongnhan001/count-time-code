@@ -15,11 +15,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-const userRouter = require('./routers/user.js');
+const userRouter = require('./routers/user');
+const count_time_codeRouter = require('./routers/count_time_code');
 
 app.use('/api/user/', userRouter);
 
-app.use('/api/count_time_code/', userRouter);
+app.use('/api/count_time_code/', count_time_codeRouter);
 
 
 
