@@ -34,6 +34,47 @@ module.exports.getTotalTimeCode = async (req, res) => {
 
 module.exports.getDashBoardByDays = async (req, res) => {
     //get dashboard time code by days
+    const id = 1;
+    const day = {
+        day: 20,
+        month: 11,
+        year: 2021 
+    };
+    //convert day to monday
+    const date = new Date(day.year, day.month, day.day);
+    const sub_day = date.getDay();
+    if (sub_day > 0) {
+        day.day -= sub_day;
+    }
+    //convert from day to string
+    const string_date = `${day.year}-${day.month}-${day.day}`;
+
+    const code_time = await count_time_code.getTotalTimeByDays(id, string_date);
+    let dashboard_code_time_day = [];
+    
+    for (let index in code_time) {
+        const date_result = code_time[index].Date.split('-');
+        const d = new Date(code_time[index].Date);
+        
+        //handle time code & convert from senconds to minuters
+        let total_time = code_time[index].end_time - code_time[index].start_time;
+        total_time = (total_time / 60).toFixed(2);
+
+
+        dashboard_code_time_day.push({
+            date: {
+                day: date_result[2],
+                month: date_result[1],
+                year: date_result[0]
+            },
+            total_time_code: total_time
+        });    
+    }
+
+    return res.status(200).json({
+        dashboard_code_time_day: dashboard_code_time_day,
+        msg: 'successfully'
+    });
 }
 
 module.exports.getDashBoardByWeeks = async (req, res) => {

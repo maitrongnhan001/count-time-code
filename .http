@@ -9,4 +9,7 @@ content-type: application/json
     "password": "123456789"
 }
 ###
-GET http://localhost:8000/api/count_time_code/get_total_time_code?id="abc"
+GET http://localhost:8000/api/count_time_code/get_total_time_code?id="1"
+
+###
+GET http://localhost:8000/api/count_time_code/get_dashboard_by_days
