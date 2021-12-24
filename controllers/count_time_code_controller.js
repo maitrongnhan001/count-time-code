@@ -38,7 +38,7 @@ module.exports.getDashBoardByDays = async (req, res) => {
     const day = {
         day: req.query.day,
         month: req.query.month,
-        year: req.query.year 
+        year: req.query.year
     };
     //convert day to monday
     const date = new Date(day.year, day.month, day.day);
@@ -51,11 +51,10 @@ module.exports.getDashBoardByDays = async (req, res) => {
 
     const code_time = await count_time_code.getTotalTimeByDays(id, string_date);
     let dashboard_code_time_day = [];
-    
+
     for (let index in code_time) {
         const date_result = code_time[index].Date.split('-');
-        const d = new Date(code_time[index].Date);
-        
+
         //handle time code & convert from senconds to minuters
         let total_time = code_time[index].end_time - code_time[index].start_time;
         total_time = (total_time / 60).toFixed(2);
@@ -68,7 +67,7 @@ module.exports.getDashBoardByDays = async (req, res) => {
                 year: date_result[0]
             },
             total_time_code: total_time
-        });    
+        });
     }
 
     return res.status(200).json({
@@ -79,6 +78,49 @@ module.exports.getDashBoardByDays = async (req, res) => {
 
 module.exports.getDashBoardByWeeks = async (req, res) => {
     //get dashboard time code by weeks
+    //get dashboard time code by days
+    const id = req.query.id;
+    const day = {
+        month: req.query.month,
+        year: req.query.year
+    };
+    //convert from day to string
+    const string_date = `${day.year}-${day.month}-01`;
+
+    const code_time = await count_time_code.getTotalTimeByWeeks(id, string_date);
+
+    let dashboard_code_time_week = [];
+    let Total_time_code = 0;
+
+    for (let index in code_time) {
+        //handle time code & convert from senconds to minuters
+        let total_time = code_time[index].end_time - code_time[index].start_time;
+        total_time = parseFloat((total_time / 60));
+        Total_time_code += total_time;
+
+        if ((parseInt(index) + 1) % 7 === 0) {
+            const date_result = code_time[index].Date.split('-');
+            const week = (index - 6) / 7;
+            console.log(code_time[index]);
+
+            const weekElement = {
+                date: {
+                    week: week,
+                    month: date_result[1],
+                    year: date_result[0]
+                },
+                total_time: Total_time_code.toFixed(2)
+            }
+            dashboard_code_time_week.push(weekElement);
+
+            Total_time_code = 0;
+        }
+    }
+
+    return res.status(200).json({
+        dashboard_code_time_week: dashboard_code_time_week,
+        msg: 'successfully'
+    });
 }
 
 module.exports.getDashBoardByMonths = async (req, res) => {

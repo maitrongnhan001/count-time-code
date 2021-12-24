@@ -26,7 +26,7 @@ module.exports.getTotalTimeByDays = (id, stringDate) => {
                 const id = JSON.parse(JSON.stringify(result))[0].id;
                 let sql = `SELECT * FROM count_time_code WHERE id IN (${id}`;
 
-                for (let i = 0; i < 7; i++) {
+                for (let i = 1; i < 7; i++) {
                     sql += `, ${(id + i)}`;
                 }
                 sql += `)`;
@@ -46,9 +46,37 @@ module.exports.getTotalTimeByDays = (id, stringDate) => {
     });
 }
 
-module.exports.getTotalTimeByWeeks = (id) => {
+module.exports.getTotalTimeByWeeks = (id, stringDate) => {
     return new Promise((reslove, reject) => {
+        const sql = `SELECT id FROM count_time_code WHERE user_id = ${id} AND Date = '${stringDate}'`;
 
+        connection.query(sql, (error, result) => {
+            if (!error) {
+                if (result.length === 0) {
+                    return reslove([]);
+                } 
+                const id = JSON.parse(JSON.stringify(result))[0].id;
+                let sql = `SELECT * FROM count_time_code WHERE id IN (${id}`;
+
+                for (let i = 1; i < 28; i++) {
+                    sql += `, ${(id + i)}`;
+                }
+                sql += `)`;
+
+                console.log(sql);
+
+                connection.query(sql, (e, r) => {
+                    if (!e) {
+                        const res = JSON.parse(JSON.stringify(r));
+                        reslove(res);
+                    } else {
+                        reject(e);
+                    }
+                })
+            } else {
+                reject(error);
+            }
+        });
     });
 }
 
