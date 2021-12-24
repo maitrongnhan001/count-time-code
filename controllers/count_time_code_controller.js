@@ -34,11 +34,11 @@ module.exports.getTotalTimeCode = async (req, res) => {
 
 module.exports.getDashBoardByDays = async (req, res) => {
     //get dashboard time code by days
-    const id = 1;
+    const id = req.query.id;
     const day = {
-        day: 20,
-        month: 11,
-        year: 2021 
+        day: req.query.day,
+        month: req.query.month,
+        year: req.query.year 
     };
     //convert day to monday
     const date = new Date(day.year, day.month, day.day);

@@ -20,6 +20,9 @@ module.exports.getTotalTimeByDays = (id, stringDate) => {
 
         connection.query(sql, (error, result) => {
             if (!error) {
+                if (result.length === 0) {
+                    return reslove([]);
+                } 
                 const id = JSON.parse(JSON.stringify(result))[0].id;
                 let sql = `SELECT * FROM count_time_code WHERE id IN (${id}`;
 
