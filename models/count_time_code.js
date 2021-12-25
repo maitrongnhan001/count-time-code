@@ -63,8 +63,6 @@ module.exports.getTotalTimeByWeeks = (id, stringDate) => {
                 }
                 sql += `)`;
 
-                console.log(sql);
-
                 connection.query(sql, (e, r) => {
                     if (!e) {
                         const res = JSON.parse(JSON.stringify(r));
@@ -80,9 +78,17 @@ module.exports.getTotalTimeByWeeks = (id, stringDate) => {
     });
 }
 
-module.exports.getTotalTimeByMonths = (id) => {
+module.exports.getTotalTimeByMonths = (id, year) => {
     return new Promise((reslove, reject) => {
-
+        const sql = `SELECT * FROM count_time_code WHERE user_id=${id} AND YEAR(Date) = '${year}'`;
+        connection.query(sql, (error, result) => {
+            if (!error) {
+                const res = JSON.parse(JSON.stringify(result));
+                reslove(res);
+            } else {
+                reject(error);
+            }
+        })
     });
 }
 
@@ -97,3 +103,10 @@ module.exports.pauseCode = (time, id) => {
         //function set time start code
     });
 }
+
+// function add(s, e, month, length) {
+//     for (let index = 1; index <= length; index ++) {
+//         let sql = `INSERT INTO count_time_code (start_time, end_time, user_id, Date) VALUES (${s}, ${e}, 1, '2022-${month}-${index}');`
+//         connection.query(sql);
+//     }
+// }

@@ -41,7 +41,7 @@ module.exports.getDashBoardByDays = async (req, res) => {
         year: req.query.year
     };
     //convert day to monday
-    const date = new Date(day.year, day.month, day.day);
+    const date = new Date(day.year, day.month - 1, day.day);
     const sub_day = date.getDay();
     if (sub_day > 0) {
         day.day -= sub_day;
@@ -78,7 +78,6 @@ module.exports.getDashBoardByDays = async (req, res) => {
 
 module.exports.getDashBoardByWeeks = async (req, res) => {
     //get dashboard time code by weeks
-    //get dashboard time code by days
     const id = req.query.id;
     const day = {
         month: req.query.month,
@@ -101,7 +100,6 @@ module.exports.getDashBoardByWeeks = async (req, res) => {
         if ((parseInt(index) + 1) % 7 === 0) {
             const date_result = code_time[index].Date.split('-');
             const week = (index - 6) / 7;
-            console.log(code_time[index]);
 
             const weekElement = {
                 date: {
@@ -125,6 +123,49 @@ module.exports.getDashBoardByWeeks = async (req, res) => {
 
 module.exports.getDashBoardByMonths = async (req, res) => {
     //get dashboard time code by months
+    const id = req.query.id;
+    const day = {
+        year: req.query.year
+    };
+    //convert from day to string
+    const string_date = `${day.year}`;
+
+    const code_time = await count_time_code.getTotalTimeByMonths(id, string_date);
+
+    let dashboard_code_time_month = [];
+    let Total_time_code = 0;
+
+    for (let index = 1; index < code_time.length; index ++) {
+        //handle time code & convert from senconds to minuters
+        let total_time = code_time[index].end_time - code_time[index].start_time;
+        total_time = parseFloat((total_time / 60));
+        Total_time_code += total_time;
+
+        const date1 = code_time[index].Date.split('-');
+        try {
+            var date2 = code_time[(parseInt(index) + 1)].Date.split('-');
+        } catch (e) {
+            date2[0] = '2022';
+            date2[1] = '01';
+        }
+        if (date1[1] !== date2[1]) {
+            const monthElement = {
+                date: {
+                    month: date1[1],
+                    year: date1[0]
+                },
+                total_time: Total_time_code.toFixed(2)
+            }
+            dashboard_code_time_month.push(monthElement);
+
+            Total_time_code = 0;
+        }
+    }
+
+    return res.status(200).json({
+        dashboard_code_time_month: dashboard_code_time_month,
+        msg: 'successfully'
+    });
 }
 
 module.exports.startCode = async (req, res) => {
